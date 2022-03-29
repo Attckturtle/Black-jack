@@ -8,8 +8,35 @@ public:
   std::string username;
   std::string password;
   int currentBalance = 500;
+  int currentBet = 0;
   bool loggedIn = false;
+  int wins = 0;
+
+  std::vector<int>chosenCards;
 };
+
+class dealerCreator {
+public:
+    std::vector<int>chosenCards;
+    int wins = 0;
+};
+
+class deckOfCardsMaker {
+public:
+    std::vector<int>potentialCards;
+    void createSelf() {
+        for (int i = 1; i < 3; i++) {
+            for (int b = 1; b < 10; b++) {
+                potentialCards.push_back(b);
+                std::cout << b;
+            }
+        }
+    }
+};
+
+deckOfCardsMaker deck;
+
+dealerCreator dealer;
 
 accountMaker account1;
 accountMaker account2;
@@ -25,8 +52,11 @@ void setUp();
 void makeAccount();
 int getAccountNumber(std::string a);
 void sendValuesToObject(int i);
-void login(int theAccountNumber);
+void login();
 void beginBlackjack(int a);
+void account1BlackJackProcessing(int a);
+void account2BlackJackProcessing(int a);
+void account3BlackJackProcessing(int a);
 
 void setUp() {
   int a;
@@ -35,10 +65,7 @@ void setUp() {
   std::cin >> a;
   switch (a) {
   case 1:
-      int saveNumber;
-      std::cout << "Select save file number\n";
-      std::cin >> saveNumber;
-    login(saveNumber);
+    login();
     break;
   case 2:
     makeAccount();
@@ -65,7 +92,7 @@ void makeAccount() {
   accountNumber = getAccountNumber(userName);
   sendValuesToObject(accountNumber);
   std::cout << "New account created\n";
-  std::cout << "Using save" << accountNumber;
+  std::cout << "Using save " << accountNumber << std::endl;
   switch (accountNumber) {
   case 1:
     account1.loggedIn = true;
@@ -82,6 +109,7 @@ void makeAccount() {
 int getAccountNumber(std::string a) {
   for (int i = 0; i <= listOfAccountUsernames.size(); i++) {
     if (listOfAccountUsernames[i] == a) {
+      i++;
       return i;
     }
   }
@@ -109,57 +137,77 @@ void sendValuesToObject(int i) {
   }
 }
 
-void login(int theAccountNumber) {
+void login() {
   std::string username;
   std::string password;
+  std::cout << "Enter username";
+  std::cin >> username;
+  std::cout << "Enter password";
+  std::cin >> password;
 
   int accountNumber = getAccountNumber(username);
 
-  switch (theAccountNumber) {
+  switch (accountNumber) {
   case 1:
-    if (listOfAccountUsernames[accountNumber] == username) {
+    if (account1.username == username) {
+        beginBlackjack(0);
     }
+    break;
+  case 2:
+      if (account2.username == username) {
+          beginBlackjack(1);
+      }
+      break;
+  case 3:
+      if (account3.username == username) {
+          beginBlackjack(2);
+      }
+      break;
   }
-  /*if (std::binary_search(listOfAccountUsernames.begin(),
-  listOfAccountUsernames.end(), username)) { if
-  (std::binary_search(listOfAccountPasswords.begin(),
-  listOfAccountPasswords.end(), password)) { std::cout << "Logged in\n"; for
-  (int i = 0; i < 3; i++) { switch (i) { case 1: if (account1.username ==
-  username) { accountNumber = 1; std::cout << "Using save 1\n";
-                                  }
-                                  break;
-                          case 2:
-                                  if (account2.username == username) {
-                                          accountNumber = 2;
-                                          std::cout << "Using save 2\n";
-                                  }
-                                  break;
-                          case 3:
-                                  if (account3.username == username) {
-                                          accountNumber = 3;
-                                          std::cout << "Using save 3\n";
-                                  }
-                                  break;
-                          }
-                  }
-          }
-          else {
-                  std::cout << "Wrong username or password";
-          }
-  }
-  */
 }
 
 void beginBlackjack(int a) {
+  int biddingAmount;
   std::vector<bool> accountDeterminingVector;
   accountDeterminingVector.push_back(account1.loggedIn);
   accountDeterminingVector.push_back(account2.loggedIn);
   accountDeterminingVector.push_back(account3.loggedIn);
-  std::cout << "You current balance is: " << account1.currentBalance;
+  std::cout << "Your current balance is: " << account1.currentBalance << std::endl;
   std::cout << "How much do you want to bid\n";
+  std::cin >> biddingAmount;
+  if (account1.loggedIn == true) {
+      account1.currentBet = biddingAmount;
+      std::cout << "$" << account1.currentBet << " deposited\n";
+      account1BlackJackProcessing(biddingAmount);
+  }
+  else if (account2.loggedIn == true) {
+      account2.currentBet = biddingAmount;
+      std::cout << "$" << account2.currentBet << " deposited\n";
+  }
+  else if (account3.loggedIn == true) {
+      account3.currentBet = biddingAmount;
+      std::cout << "$" << account3.currentBet << " deposited\n";
+  }
+}
+
+void account1BlackJackProcessing(int a){
+ int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
+ int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+}
+
+void account2BlackJackProcessing(int a) {
+
+}
+
+void account3BlackJackProcessing(int a) {
+
 }
 
 int main() {
-  setUp();
+    deck.createSelf();
+    //for (auto i : deck.potentialCards) {
+    //    std::cout << i << ' '; 
+    //}
+    setUp();
   return 0;
 }
