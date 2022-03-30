@@ -8,6 +8,7 @@ public:
   std::string username;
   std::string password;
   int currentBalance = 500;
+  int totalCards = 0;
   int currentBet = 0;
   bool loggedIn = false;
   int wins = 0;
@@ -18,6 +19,7 @@ public:
 class dealerCreator {
 public:
     std::vector<int>chosenCards;
+    int totalScore = 0;
     int wins = 0;
 };
 
@@ -25,10 +27,9 @@ class deckOfCardsMaker {
 public:
     std::vector<int>potentialCards;
     void createSelf() {
-        for (int i = 1; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             for (int b = 1; b < 10; b++) {
                 potentialCards.push_back(b);
-                std::cout << b;
             }
         }
     }
@@ -72,6 +73,7 @@ void setUp() {
     break;
   default:
     std::cout << "Pick a valid option\n";
+    setUp();
   }
 }
 
@@ -109,7 +111,6 @@ void makeAccount() {
 int getAccountNumber(std::string a) {
   for (int i = 0; i <= listOfAccountUsernames.size(); i++) {
     if (listOfAccountUsernames[i] == a) {
-      i++;
       return i;
     }
   }
@@ -168,10 +169,6 @@ void login() {
 
 void beginBlackjack(int a) {
   int biddingAmount;
-  std::vector<bool> accountDeterminingVector;
-  accountDeterminingVector.push_back(account1.loggedIn);
-  accountDeterminingVector.push_back(account2.loggedIn);
-  accountDeterminingVector.push_back(account3.loggedIn);
   std::cout << "Your current balance is: " << account1.currentBalance << std::endl;
   std::cout << "How much do you want to bid\n";
   std::cin >> biddingAmount;
@@ -183,31 +180,62 @@ void beginBlackjack(int a) {
   else if (account2.loggedIn == true) {
       account2.currentBet = biddingAmount;
       std::cout << "$" << account2.currentBet << " deposited\n";
+      account2BlackJackProcessing(biddingAmount);
   }
   else if (account3.loggedIn == true) {
       account3.currentBet = biddingAmount;
       std::cout << "$" << account3.currentBet << " deposited\n";
+      account3BlackJackProcessing(biddingAmount);
   }
 }
 
 void account1BlackJackProcessing(int a){
+ std::cout << "You currently have: ";
+ for (auto i : account1.chosenCards) {
+    std::cout << i << ' ';
+ }
+ std::cout << "" << std::endl;
  int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
+ account1.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
+ account1.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
+
  int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+ dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
+ dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 }
 
 void account2BlackJackProcessing(int a) {
+    std::cout << "You currently have: ";
+    for (auto i : account2.chosenCards) {
+        std::cout << i << ' ';
+    }
+    std::cout << "" << std::endl;
+    int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
+    account2.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
+    account2.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
 
+    int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+    dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
+    dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 }
 
 void account3BlackJackProcessing(int a) {
+    std::cout << "You currently have: ";
+    for (auto i : account3.chosenCards) {
+        std::cout << i << ' ';
+    }
+    std::cout << "" << std::endl;
+    int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
+    account3.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
+    account3.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
 
+    int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+    dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
+    dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 }
 
 int main() {
     deck.createSelf();
-    //for (auto i : deck.potentialCards) {
-    //    std::cout << i << ' '; 
-    //}
     setUp();
   return 0;
 }
