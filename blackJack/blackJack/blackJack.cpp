@@ -190,18 +190,38 @@ void beginBlackjack(int a) {
 }
 
 void account1BlackJackProcessing(int a){
- std::cout << "You currently have: ";
- for (auto i : account1.chosenCards) {
-    std::cout << i << ' ';
- }
- std::cout << "" << std::endl;
- int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
- account1.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
- account1.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
+ bool drawingAnotherCard = true;
+ char letterAnswer;
+ if (drawingAnotherCard) {
+     int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
+     account1.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
+     account1.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
 
- int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
- dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
- dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
+     int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+     dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
+     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
+     drawingAnotherCard = false;
+
+     std::cout << "You currently have: ";
+     for (auto i : account1.chosenCards) {
+         std::cout << i << ' ';
+     }
+     std::cout << "" << std::endl;
+ }
+ std::cout << "Draw another card? T/F\n";
+ std::cin >> letterAnswer;
+ letterAnswer = toupper(letterAnswer);
+
+ switch (letterAnswer) {
+ case 'T':
+     drawingAnotherCard = true;
+     account1BlackJackProcessing(a);
+     break;
+ case 'F':
+     drawingAnotherCard = false;
+     account1BlackJackProcessing(a);
+     break;
+ }
 }
 
 void account2BlackJackProcessing(int a) {
