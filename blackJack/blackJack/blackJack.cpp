@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 
 class accountMaker {
@@ -62,6 +64,8 @@ void beginBlackjack(int a);
 void account1BlackJackProcessing(int a);
 void account2BlackJackProcessing(int a);
 void account3BlackJackProcessing(int a);
+void dealerProcessing(int a);
+void seeWhoWon(int a);
 
 void setUp() {
   int a;
@@ -191,20 +195,23 @@ void beginBlackjack(int a) {
       std::cout << "$" << account3.currentBet << " deposited\n";
       account3BlackJackProcessing(biddingAmount);
   }
-  dealerProcessing();
+  dealerProcessing(biddingAmount);
 }
 
-void dealerProcessing() {
+//TODO: Gives new win every dealer draw
+void dealerProcessing(int a) {
+    std::cout << "Dealer drew another card\n";
     int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
     dealer.totalScore += deck.potentialCards[indexOfRemoveNumberDealer];
     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 
     int determineDealerMove = rand() % 5 + 1;
     if (dealer.totalScore > (winningScore - determineDealerMove)) {
-        dealerProcessing();
+        dealerProcessing(a);
     }
     else {
         dealerTrue = true;
+        seeWhoWon(a);
     }
 }
 
@@ -270,8 +277,8 @@ void account3BlackJackProcessing(int a) {
 }
 
 void seeWhoWon(int a) {
-    bool dealerLessThan21;
-    bool playerLessThan21;
+    bool dealerLessThan21 = false;
+    bool playerLessThan21 = false;
     if (dealerTrue) {
         if (dealer.totalScore <= 21)
         {
@@ -282,19 +289,32 @@ void seeWhoWon(int a) {
             playerLessThan21 = true;
         }
 
+        if (!dealerLessThan21 && playerLessThan21) {
+            std::cout << "You win " << a << "dollars!\n";
+            account1.currentBalance += a;
+            std::cout << account1.currentBalance << " dollars remaining\n";
+        }
+        else if (dealerLessThan21 && !playerLessThan21) {
+            std::cout << "Dealer wins you lost " << a << "dollars!\n";
+            account1.totalCards -= a;
+            std::cout << account1.currentBalance << " dollars remaining\n";
+        }
+
         if (dealerLessThan21 && playerLessThan21) {
             if (dealer.totalScore < account1.totalCards) {
-                std::cout << "You win " << a << "dollars!";
+                std::cout << "You win " << a << "dollars!\n";
                 account1.currentBalance += a;
+                std::cout << account1.currentBalance << " dollars remaining\n";
             }
             else if (dealer.totalScore > account1.totalCards) {
-                std::cout << "Dealer wins you lost " << a << "dollars!";
+                std::cout << "Dealer wins you lost " << a << "dollars!\n";
                 account1.totalCards -= a;
+                std::cout << account1.currentBalance << " dollars remaining\n";
             }
         }
     }
     else {
-        dealerProcessing();
+        dealerProcessing(a);
     }
 }
 
