@@ -48,6 +48,10 @@ std::vector<std::string> listOfAccountPasswords = {""};
 std::vector<int> listOfDepositedValues = {0};
 
 int amountOfAccounts = 1;
+const int winningScore = 21;
+
+bool dealerTrue;
+bool playerTrue;
 
 void setUp();
 void makeAccount();
@@ -187,6 +191,21 @@ void beginBlackjack(int a) {
       std::cout << "$" << account3.currentBet << " deposited\n";
       account3BlackJackProcessing(biddingAmount);
   }
+  dealerProcessing();
+}
+
+void dealerProcessing() {
+    int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
+    dealer.totalScore += deck.potentialCards[indexOfRemoveNumberDealer];
+    dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
+
+    int determineDealerMove = rand() % 5 + 1;
+    if (dealer.totalScore > (winningScore - determineDealerMove)) {
+        dealerProcessing();
+    }
+    else {
+        dealerTrue = true;
+    }
 }
 
 void account1BlackJackProcessing(int a){
@@ -196,17 +215,13 @@ void account1BlackJackProcessing(int a){
      int indexOfRemoveNumberPlayer = rand() % (deck.potentialCards.size() - 1) + 0;
      account1.totalCards += deck.potentialCards[indexOfRemoveNumberPlayer];
      account1.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
-
-     int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
-     dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
-     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
      drawingAnotherCard = false;
 
      std::cout << "You currently have: ";
      for (auto i : account1.chosenCards) {
-         std::cout << i << ' ';
+         std::cout << i << "\n";
      }
-     std::cout << "" << std::endl;
+     std::cout << "\n";
  }
  std::cout << "Draw another card? T/F\n";
  std::cin >> letterAnswer;
@@ -219,7 +234,7 @@ void account1BlackJackProcessing(int a){
      break;
  case 'F':
      drawingAnotherCard = false;
-     account1BlackJackProcessing(a);
+     seeWhoWon(a);
      break;
  }
 }
@@ -252,6 +267,35 @@ void account3BlackJackProcessing(int a) {
     int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
     dealer.totalScore += deck.potentialCards[indexOfRemoveNumberPlayer];
     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
+}
+
+void seeWhoWon(int a) {
+    bool dealerLessThan21;
+    bool playerLessThan21;
+    if (dealerTrue) {
+        if (dealer.totalScore <= 21)
+        {
+            dealerLessThan21 = true;
+        }
+
+        if (account1.totalCards <= 21) {
+            playerLessThan21 = true;
+        }
+
+        if (dealerLessThan21 && playerLessThan21) {
+            if (dealer.totalScore < account1.totalCards) {
+                std::cout << "You win " << a << "dollars!";
+                account1.currentBalance += a;
+            }
+            else if (dealer.totalScore > account1.totalCards) {
+                std::cout << "Dealer wins you lost " << a << "dollars!";
+                account1.totalCards -= a;
+            }
+        }
+    }
+    else {
+        dealerProcessing();
+    }
 }
 
 int main() {
