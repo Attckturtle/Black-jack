@@ -102,7 +102,7 @@ void makeAccount() {
   accountNumber = getAccountNumber(userName);
   sendValuesToObject(accountNumber);
   std::cout << "New account created\n";
-  std::cout << "Using save " << accountNumber << std::endl;
+  std::cout << "Using save " << accountNumber << "\n";
   switch (accountNumber) {
   case 1:
     account1.loggedIn = true;
@@ -117,11 +117,11 @@ void makeAccount() {
 }
 
 int getAccountNumber(std::string a) {
-  for (int i = 0; i <= listOfAccountUsernames.size(); i++) {
-    if (listOfAccountUsernames[i] == a) {
-      return i;
+    for (int i = 0; i <= listOfAccountUsernames.size(); i++) {
+        if (listOfAccountUsernames[i] == a) {
+            return i;
+        }
     }
-  }
 }
 
 void sendValuesToObject(int i) {
@@ -177,7 +177,7 @@ void login() {
 
 void beginBlackjack(int a) {
   int biddingAmount;
-  std::cout << "Your current balance is: " << account1.currentBalance << std::endl;
+  std::cout << "Your current balance is: " << account1.currentBalance << "\n";
   std::cout << "How much do you want to bid\n";
   std::cin >> biddingAmount;
   if (account1.loggedIn == true) {
