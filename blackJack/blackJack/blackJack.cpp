@@ -232,9 +232,9 @@ void account1BlackJackProcessing(int a){
      account1.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberPlayer]);
      drawingAnotherCard = false;
 
-     std::cout << "You currently have: ";
-     for (auto i : account1.chosenCards) {
-         std::cout << i << "\n";
+     std::cout << "You currently have: \n";
+     for (int i = 0; i < account1.chosenCards.size(); i++) {
+         std::cout << account1.chosenCards[i] << "\n";
      }
      std::cout << "\n";
  }
