@@ -16,11 +16,11 @@ public:
   std::vector<int>chosenCards;
 
   void setValues() {
-      currentBalance += 500;
-      totalCards += 0;
-      currentBet += 0;
+      currentBalance = 500;
+      totalCards = 0;
+      currentBet = 0;
       loggedIn = false;
-      wins += 0;
+      wins = 0;
   }
 };
 
@@ -91,7 +91,6 @@ void setUp() {
   }
 }
 
-
 //TODO Player starts with 0 dollars
 void makeAccount() {
   int accountNumber;
@@ -105,7 +104,6 @@ void makeAccount() {
 
   listOfAccountUsernames.push_back(userName);
   listOfAccountPasswords.push_back(password);
-  listOfDepositedValues.push_back(0);
 
   accountNumber = getAccountNumber(userName);
   sendValuesToObject(accountNumber);
@@ -139,17 +137,14 @@ void sendValuesToObject(int i) {
   case 1:
     account1.username = listOfAccountUsernames[a];
     account1.password = listOfAccountPasswords[a];
-    account1.currentBalance = listOfDepositedValues[a];
     break;
   case 2:
     account2.username = listOfAccountUsernames[a];
     account2.password = listOfAccountPasswords[a];
-    account2.currentBalance = listOfDepositedValues[a];
     break;
   case 3:
     account3.username = listOfAccountUsernames[a];
     account3.password = listOfAccountPasswords[a];
-    account3.currentBalance = listOfDepositedValues[a];
     break;
   }
 }
@@ -186,7 +181,7 @@ void login() {
 void beginBlackjack(int a) {
   int biddingAmount;
   std::cout << "Your current balance is: " << account1.currentBalance << "\n";
-  std::cout << "How much do you want to bid\n";
+  std::cout << "How much do you want to bid?\n";
   std::cin >> biddingAmount;
   if (account1.loggedIn == true) {
       account1.currentBet = biddingAmount;
@@ -207,17 +202,17 @@ void beginBlackjack(int a) {
 }
 
 //TODO: Gives new win every dealer draw
-void dealerProcessing(int a) {
+void dealerProcessing(int a) {=
     std::cout << "Dealer drew another card\n";
     int indexOfRemoveNumberDealer = rand() % (deck.potentialCards.size() - 1) + 0;
     dealer.totalScore += deck.potentialCards[indexOfRemoveNumberDealer];
     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 
     int determineDealerMove = rand() % 5 + 1;
-    if (dealer.totalScore < (winningScore - determineDealerMove)) {
+    if (dealer.totalScore < (winningScore - 5)) {
         dealerProcessing(a);
     }
-    else {
+    else if (dealer.totalScore > (winningScore - 5)) {
         dealerTrue = true;
         seeWhoWon(a);
     }
@@ -335,7 +330,6 @@ int main() {
     account1.setValues();
     account2.setValues();
     account3.setValues();
-
     deck.createSelf();
     setUp();
   return 7;
