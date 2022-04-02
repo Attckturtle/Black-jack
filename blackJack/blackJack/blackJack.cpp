@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <chrono>
@@ -9,13 +8,20 @@ class accountMaker {
 public:
   std::string username;
   std::string password;
-  int currentBalance = 500;
+  int currentBalance = 0;
   int totalCards = 0;
   int currentBet = 0;
   bool loggedIn = false;
   int wins = 0;
-
   std::vector<int>chosenCards;
+
+  void setValues() {
+      currentBalance += 500;
+      totalCards += 0;
+      currentBet += 0;
+      loggedIn = false;
+      wins += 0;
+  }
 };
 
 class dealerCreator {
@@ -85,6 +91,8 @@ void setUp() {
   }
 }
 
+
+//TODO Player starts with 0 dollars
 void makeAccount() {
   int accountNumber;
   std::cout << "Enter a username\n";
@@ -206,7 +214,7 @@ void dealerProcessing(int a) {
     dealer.chosenCards.push_back(deck.potentialCards[indexOfRemoveNumberDealer]);
 
     int determineDealerMove = rand() % 5 + 1;
-    if (dealer.totalScore > (winningScore - determineDealerMove)) {
+    if (dealer.totalScore < (winningScore - determineDealerMove)) {
         dealerProcessing(a);
     }
     else {
@@ -241,6 +249,7 @@ void account1BlackJackProcessing(int a){
      break;
  case 'F':
      drawingAnotherCard = false;
+     playerTrue = true;
      seeWhoWon(a);
      break;
  }
@@ -279,7 +288,7 @@ void account3BlackJackProcessing(int a) {
 void seeWhoWon(int a) {
     bool dealerLessThan21 = false;
     bool playerLessThan21 = false;
-    if (dealerTrue) {
+    if (dealerTrue && playerTrue) {
         if (dealer.totalScore <= 21)
         {
             dealerLessThan21 = true;
@@ -313,13 +322,21 @@ void seeWhoWon(int a) {
             }
         }
     }
-    else {
+    else if (!dealerTrue && playerTrue) {
         dealerProcessing(a);
+    }
+    
+    else if (dealerTrue && !playerTrue) {
+        account1BlackJackProcessing(a);
     }
 }
 
 int main() {
+    account1.setValues();
+    account2.setValues();
+    account3.setValues();
+
     deck.createSelf();
     setUp();
-  return 0;
+  return 7;
 }
