@@ -1,0 +1,3 @@
+﻿  blackJack.cpp
+C:\Users\65881\OneDrive\Desktop\C++\blackJack\blackJack\blackJack.cpp(125): warning C4715: 'getAccountNumber': not all control paths return a value
+  blackJack.vcxproj -> C:\Users\65881\OneDrive\Desktop\C++\blackJack\x64\Debug\blackJack.exe
